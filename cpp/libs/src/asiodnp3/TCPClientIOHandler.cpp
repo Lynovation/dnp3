@@ -52,7 +52,7 @@ void TCPClientIOHandler::ShutdownImpl()
 void TCPClientIOHandler::BeginChannelAccept()
 {
 	this->client = TCPClient::Create(logger, executor, remote, adapter);
-	this->StartConnect(this->client, this->retry.minOpenRetry);
+	this->StartConnect(this->retry.minOpenRetry);
 }
 
 void TCPClientIOHandler::SuspendChannelAccept()
@@ -65,9 +65,12 @@ void TCPClientIOHandler::OnChannelShutdown()
 	this->BeginChannelAccept();
 }
 
-void TCPClientIOHandler::StartConnect(const std::shared_ptr<asiopal::TCPClient>& client, const openpal::TimeDuration& delay)
+bool TCPClientIOHandler::StartConnect(const openpal::TimeDuration& delay)
 {
-	FORMAT_LOG_BLOCK(this->logger, openpal::logflags::INFO, "Connecting to: %s", this->remote.address.c_str());
+	if(!this->client)
+	{
+		return false;
+	}
 
 	auto cb = [self = shared_from_this(), delay](const std::shared_ptr<Executor>& executor, asio::ip::tcp::socket socket, const std::error_code & ec) -> void
 	{
@@ -84,7 +87,7 @@ void TCPClientIOHandler::StartConnect(const std::shared_ptr<asiopal::TCPClient>&
 			{
 				auto retry_cb = [self, newDelay]()
 				{
-					self->StartConnect(self->client, newDelay);
+					self->StartConnect(newDelay);
 				};
 
 				self->retrytimer.Start(delay, retry_cb);
@@ -99,7 +102,11 @@ void TCPClientIOHandler::StartConnect(const std::shared_ptr<asiopal::TCPClient>&
 
 	};
 
-	this->client->BeginConnect(cb);
+	FORMAT_LOG_BLOCK(this->logger, openpal::logflags::INFO, "Connecting to: %s", this->remote.address.c_str());
+
+	client->BeginConnect(cb);
+
+	return true;
 }
 
 void TCPClientIOHandler::ResetState()

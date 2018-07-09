@@ -37,20 +37,22 @@ int main()
 
 	for(int i = 0; i < 1000; ++i)
 	{
-	    std::cout << "start iteration: " << i << std::endl;
+		std::cout << "start iteration: " << i << std::endl;
 
-        DNP3Manager manager2(NUM_THREADS, ConsoleLogger::Create());
-        DNP3Manager manager1(NUM_THREADS, ConsoleLogger::Create());
+		DNP3Manager manager2(NUM_THREADS, ConsoleLogger::Create());
+		DNP3Manager manager1(NUM_THREADS, ConsoleLogger::Create());
 
-        start_outstation(manager1);
-	    start_master(manager2);
+		const bool is_even = (i % 2) == 0;
 
-	    // give the two sides sufficient time to connect
-	    std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		start_outstation(is_even  ? manager1 : manager2);
+		start_master(is_even  ? manager2 : manager1);
 
-        std::cout << "end iteration: " << i << std::endl;
+		// give the two sides sufficient time to connect
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 
-	    // shutdown manager2 followed by manager1
+		std::cout << "end iteration: " << i << std::endl;
+
+		// shutdown manager2 followed by manager1
 	}
 
 	return 0;

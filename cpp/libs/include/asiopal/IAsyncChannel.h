@@ -41,7 +41,7 @@ public:
 	IAsyncChannel(const std::shared_ptr<Executor>& executor) : executor(executor)
 	{}
 
-	virtual ~IAsyncChannel() {}
+	virtual ~IAsyncChannel() = default;
 
 	void SetCallbacks(const std::shared_ptr<IChannelCallbacks>& callbacks)
 	{

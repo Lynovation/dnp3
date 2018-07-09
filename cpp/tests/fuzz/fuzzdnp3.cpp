@@ -10,13 +10,14 @@ using namespace openpal;
 using namespace opendnp3;
 using namespace asiodnp3;
 
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
-    RSlice buffer(Data, Size);
-    openpal::Logger logger(ConsoleLogger::Create(), "decoder", LogFilters(0));
-    IDecoderCallbacks callback;
-    Decoder decoder(callback, logger);
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
+{
+	RSlice buffer(Data, Size);
+	openpal::Logger logger(ConsoleLogger::Create(), "decoder", LogFilters(0));
+	IDecoderCallbacks callback;
+	Decoder decoder(callback, logger);
 
-    decoder.DecodeLPDU(buffer);
+	decoder.DecodeLPDU(buffer);
 
-    return 0;
+	return 0;
 }

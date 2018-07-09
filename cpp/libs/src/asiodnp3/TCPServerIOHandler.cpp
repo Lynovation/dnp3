@@ -63,9 +63,9 @@ void TCPServerIOHandler::ShutdownImpl()
 
 void TCPServerIOHandler::BeginChannelAccept()
 {
-	auto callback = [self = shared_from_this(), this](const std::shared_ptr<asiopal::Executor>& executor, asio::ip::tcp::socket socket)
+	auto callback = [self = shared_from_this()](const std::shared_ptr<asiopal::Executor>& executor, asio::ip::tcp::socket socket)
 	{
-		this->OnNewChannel(SocketChannel::Create(executor, std::move(socket)));
+		self->OnNewChannel(SocketChannel::Create(executor, std::move(socket)));
 	};
 
 	if (this->server)

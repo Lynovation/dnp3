@@ -59,7 +59,10 @@ public:
 
 protected:
 
-	virtual std::shared_ptr<IOHandler> GetSelf() override { return shared_from_this(); }
+	virtual std::shared_ptr<IOHandler> GetSelf() override
+	{
+		return shared_from_this();
+	}
 
 	virtual void ShutdownImpl() override;
 	virtual void BeginChannelAccept() override;
@@ -68,7 +71,7 @@ protected:
 
 private:
 
-	void StartConnect(const std::shared_ptr<asiopal::TCPClient>& client, const openpal::TimeDuration& delay);
+	bool StartConnect(const openpal::TimeDuration& delay);
 
 	void ResetState();
 

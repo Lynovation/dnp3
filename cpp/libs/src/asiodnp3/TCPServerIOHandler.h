@@ -92,7 +92,7 @@ protected:
 
 	std::shared_ptr<IOHandler> GetSelf() override
 	{
-		return std::shared_ptr<IOHandler>();
+		return shared_from_this();
 	}
 
 	virtual void ShutdownImpl() override;
