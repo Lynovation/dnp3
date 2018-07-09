@@ -37,10 +37,13 @@ int main()
 
 	for(int i = 0; i < 1000; ++i)
 	{
-		std::cout << "start iteration: " << i << std::endl;
+		if(i % 100 == 0)
+		{
+			std::cout << "start iteration: " << i << std::endl;
+		}
 
-		DNP3Manager manager2(NUM_THREADS, ConsoleLogger::Create());
-		DNP3Manager manager1(NUM_THREADS, ConsoleLogger::Create());
+		DNP3Manager manager2(NUM_THREADS);
+		DNP3Manager manager1(NUM_THREADS);
 
 		const bool is_even = (i % 2) == 0;
 
@@ -49,8 +52,6 @@ int main()
 
 		// give the two sides sufficient time to connect
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
-
-		std::cout << "end iteration: " << i << std::endl;
 
 		// shutdown manager2 followed by manager1
 	}
